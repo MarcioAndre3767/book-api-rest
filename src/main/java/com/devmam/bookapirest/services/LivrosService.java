@@ -22,16 +22,15 @@ public class LivrosService {
 		return livrosRepository.findAll();
 	}
 	
-	//buscar por ID
-	public Optional<Livro> buscar(Long id) {
+	//buscar por ID	
+	public Livro buscar(Long id) {
 		Optional<Livro> livro = livrosRepository.findById(id);
-		
-		if(livro == null) {
-			throw new LivroNaoEncontradoException("O livro não foi encontrado em nosso Banco de Dados!");
-		}		
-		
-		return livro;
+
+		return livro.orElseThrow( () -> new LivroNaoEncontradoException(
+				"O livro não foi encontrado em nosso Banco de Dados! ID. " + id + ", Tipo: "
+		 + Livro.class.getName()));
 	}
+
 	
 	//salvar
 	public Livro salvar(Livro livro) {

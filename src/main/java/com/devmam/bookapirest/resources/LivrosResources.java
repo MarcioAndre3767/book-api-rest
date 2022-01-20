@@ -16,8 +16,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.devmam.bookapirest.domain.Livro;
 import com.devmam.bookapirest.services.LivrosService;
-import com.devmam.bookapirest.services.exceptions.LivroNaoEncontradoException;
-
 
 @RestController
 @RequestMapping("/livros")
@@ -26,65 +24,41 @@ public class LivrosResources {
 	@Autowired
 	private LivrosService livrosService;
 	
-	
+		
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<List<Livro>> listar() {
 		return ResponseEntity.status(HttpStatus.OK).body(livrosService.listar());		
 	}
 		
-	
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<Void> salvar(@RequestBody Livro livro) {
-		livro = livrosService.salvar(livro);
-				
+		livro = livrosService.salvar(livro);				
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()		//retorno com URI
 				.path("/{id}").buildAndExpand(livro.getId()).toUri();
 		
 		return ResponseEntity.created(uri).build();
 	} 
-	
-	
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public ResponseEntity<?> buscar(@PathVariable("id") Long id) {
-		Optional<Livro> livro = null;
 		
-		try {
-			livro = livrosService.buscar(id);
-		} catch (Exception e) {
-			return ResponseEntity.notFound().build();
-		}
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	public ResponseEntity<?> buscar(@PathVariable("id") Long id) {				
+		Optional<Livro> livro = Optional.of(livrosService.buscar(id));
 
 		return ResponseEntity.status(HttpStatus.OK).body(livro);
 	}	
-
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<Void> deletar(@PathVariable("id") Long id) {
-		
-		try {
-			livrosService.deletar(id);
-		} catch (LivroNaoEncontradoException e) {
-			return ResponseEntity.notFound().build();			
-		}
+		livrosService.deletar(id);
 		
 		return ResponseEntity.noContent().build();		
 	}
-	
-	
-	
+			
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<Void> atualizar(@RequestBody Livro livro, @PathVariable("id") Long id) {
 		livro.setId(id);
+		livrosService.atualizar(livro);
 		
-		try {
-			livrosService.atualizar(livro);
-		} catch (LivroNaoEncontradoException e) {
-			return ResponseEntity.notFound().build();
-		}
-		
-		
-		return ResponseEntity.noContent().build();
-		
+		return ResponseEntity.noContent().build();		
 	}		
 
 }
