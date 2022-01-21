@@ -1,5 +1,6 @@
 package com.devmam.bookapirest.services;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -7,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import com.devmam.bookapirest.domain.Comentario;
 import com.devmam.bookapirest.domain.Livro;
+import com.devmam.bookapirest.repository.ComentarioRepository;
 import com.devmam.bookapirest.repository.LivrosRepository;
 import com.devmam.bookapirest.services.exceptions.LivroNaoEncontradoException;
 
@@ -16,6 +19,9 @@ public class LivrosService {
 
 	@Autowired
 	private LivrosRepository livrosRepository;
+	
+	@Autowired
+	private ComentarioRepository comentarioRepository;
 	
 	//listar todos
 	public List<Livro> listar() {
@@ -54,11 +60,20 @@ public class LivrosService {
 		verificarExistencia(livro);
 		livrosRepository.save(livro);
 	}
-	
-	
-	
+		
 	private void verificarExistencia(Livro livro) { 
 		buscar(livro.getId());										//public Optional<Livro> buscar(Long id)
+	}
+	
+	//comentário
+	
+	public Comentario SalvarComentario(Long livroId, Comentario comentario) {
+		Livro livro = buscar(livroId);
+		
+		comentario.setLivro(livro);
+		comentario.setData(new Date());
+		
+		return comentarioRepository.save(comentario);
 	}
 	
 		
