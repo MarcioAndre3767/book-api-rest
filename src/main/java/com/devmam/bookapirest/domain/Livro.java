@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
@@ -33,8 +35,10 @@ public class Livro {
 	@OneToMany(mappedBy = "livro")
 	private List<Comentario> comentarios;	
 	
+	@ManyToOne
+	@JoinColumn(name = "AUTOR_ID")
 	@JsonInclude(Include.NON_NULL)
-	private String autor;
+	private Autor autor;
 	
 	
 	public Livro() {
@@ -86,13 +90,17 @@ public class Livro {
 		this.comentarios = comentarios;
 	}
 
-	public String getAutor() {
+	public Autor getAutor() {
 		return autor;
 	}
 
-	public void setAutor(String autor) {
+	public void setAutor(Autor autor) {
 		this.autor = autor;
 	}
+
+
+
+
 	
 	
 
