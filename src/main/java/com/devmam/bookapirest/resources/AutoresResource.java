@@ -4,6 +4,8 @@ import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +36,7 @@ public class AutoresResource {
 	
 	
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<Void> salvar(@RequestBody Autor autor) {
+	public ResponseEntity<Void> salvar(@Valid @RequestBody Autor autor) { 
 		autor = autoresService.salvar(autor);
 		
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -50,16 +52,7 @@ public class AutoresResource {
 		return ResponseEntity.status(HttpStatus.OK).body(Optional.of(autoresService.buscar(id)));
 	}
 	
-	/*
-			
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public ResponseEntity<?> buscar(@PathVariable("id") Long id) {				
-		Optional<Livro> livro = Optional.of(livrosService.buscar(id));
 
-		return ResponseEntity.status(HttpStatus.OK).body(livro);
-	}	
-	  */
-	
 
 }
 
