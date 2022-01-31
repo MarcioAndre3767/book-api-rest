@@ -1,7 +1,11 @@
 package com.devmam.bookapirest.domain;
 
-public class DetalhesErro {
+import java.io.Serializable;
+
+public class DetalhesErro implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
+
 	private String titulo;
 	
 	private Long status;
